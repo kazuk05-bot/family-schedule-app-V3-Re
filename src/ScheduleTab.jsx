@@ -53,11 +53,11 @@ export default function ScheduleTab({
                 })}
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", marginBottom: 4 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, minmax(0, 1fr))", marginBottom: 4 }}>
                 {WEEKDAYS.map((w, i) => (<div key={w} style={{ textAlign: "center", fontSize: 12, fontWeight: 700, padding: "4px 0", color: i === 0 ? "#B33A3A" : i === 6 ? "#3B5E7A" : "#6E6A5F" }}>{w}</div>))}
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, minmax(0, 1fr))", gap: 4 }}>
                 {cells.map(({ date, inMonth, key }) => {
                   const isToday = sameDay(date, today);
                   const isSelected = key === selected;
@@ -90,38 +90,39 @@ export default function ScheduleTab({
             <div style={{ color: "#8A8371", fontSize: 13.5, padding: "18px 4px", textAlign: "center", border: "1px dashed #E2D8BE", borderRadius: 6 }}>グループタブからメンバーを追加してください</div>
           ) : selectedEvents.length === 0 ? (
             <div style={{ color: "#8A8371", fontSize: 13.5, padding: "18px 4px", textAlign: "center", border: "1px dashed #E2D8BE", borderRadius: 6 }}>この日の予定はありません</div>
-          ) : (
-            <ul style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {selectedEvents.map((ev) => {
-                const mem = memberOf(ev.memberId);
-                const multiDay = ev.endDate && ev.endDate !== ev.startDate;
-                return (
-                  <li key={ev.id} style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 12px", borderRadius: 6, border: "1px solid #EEE5CE", borderLeft: `4px solid ${mem.color}`, background: "#FFFEFB" }}>
-                    <div style={{ flex: 1, cursor: "pointer" }} onClick={() => openEditModal(ev)}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                        <span style={{ fontWeight: 700, fontSize: 14.5, color: "#2B2A2E" }}>{ev.title}</span>
-                        <span style={{ fontSize: 10.5, fontWeight: 700, color: mem.color, background: `${mem.color}18`, borderRadius: 999, padding: "1px 8px" }}>{mem.name}</span>
-                        {ev.recurrence && ev.recurrence !== "none" && (
-                          <span style={{ fontSize: 10, fontWeight: 700, color: "#8A6A22", background: "#C8963E22", borderRadius: 999, padding: "1px 8px", display: "flex", alignItems: "center", gap: 3 }}><Repeat size={10} />{RECUR_LABEL[ev.recurrence]}</span>
+            ) : (
+              <ul style={{ display: "flex", flexDirection: "column", gap: 8, margin: 0, padding: 0, listStyle: "none" }}>
+                {selectedEvents.map((ev) => {
+                  const mem = memberOf(ev.memberId);
+                  const multiDay = ev.endDate && ev.endDate !== ev.startDate;
+                  return (
+                    <li key={ev.id} style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 12px", borderRadius: 6, border: "1px solid #EEE5CE", borderLeft: `4px solid ${mem.color}`, background: "#FFFEFB" }}>
+                      <div style={{ flex: 1, cursor: "pointer" }} onClick={() => openEditModal(ev)}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                          <span style={{ fontWeight: 700, fontSize: 14.5, color: "#2B2A2E" }}>{ev.title}</span>
+                          <span style={{ fontSize: 10.5, fontWeight: 700, color: mem.color, background: `${mem.color}18`, borderRadius: 999, padding: "1px 8px" }}>{mem.name}</span>
+                          {ev.recurrence && ev.recurrence !== "none" && (
+                            <span style={{ fontSize: 10, fontWeight: 700, color: "#8A6A22", background: "#C8963E22", borderRadius: 999, padding: "1px 8px", display: "flex", alignItems: "center", gap: 3 }}><Repeat size={10} />{RECUR_LABEL[ev.recurrence]}</span>
+                          )}
+                        </div>
+                        {(ev.startTime || multiDay) && (
+                          <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "#6E6A5F", marginTop: 3 }}>
+                            <Clock size={12} />
+                            {multiDay && `${fmtMD(ev.startDate)}〜${fmtMD(ev.endDate)} `}
+                            {ev.startTime && (ev.endTime ? `${ev.startTime}〜${ev.endTime}` : ev.startTime)}
+                          </div>
+                        )}
+                        {ev.memo && (
+                          <div style={{ display: "flex", alignItems: "flex-start", gap: 4, fontSize: 12.5, color: "#5B5748", marginTop: 4 }}><StickyNote size={12} style={{ marginTop: 2, flexShrink: 0 }} /> <span>{ev.memo}</span></div>
                         )}
                       </div>
-                      {(ev.startTime || multiDay) && (
-                        <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "#6E6A5F", marginTop: 3 }}>
-                          <Clock size={12} />
-                          {multiDay && `${fmtMD(ev.startDate)}〜${fmtMD(ev.endDate)} `}
-                          {ev.startTime && (ev.endTime ? `${ev.startTime}〜${ev.endTime}` : ev.startTime)}
-                        </div>
-                      )}
-                      {ev.memo && (
-                        <div style={{ display: "flex", alignItems: "flex-start", gap: 4, fontSize: 12.5, color: "#5B5748", marginTop: 4 }}><StickyNote size={12} style={{ marginTop: 2, flexShrink: 0 }} /> <span>{ev.memo}</span></div>
-                      )}
-                    </div>
-                    <button onClick={() => deleteEvent(ev.id)} className="focus-ring" aria-label="削除" style={{ background: "none", border: "none", cursor: "pointer", color: "#8A8371", padding: 4 }}><Trash2 size={16} /></button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+                      <button onClick={() => deleteEvent(ev.id)} className="focus-ring" aria-label="削除" style={{ background: "none", border: "none", cursor: "pointer", color: "#8A8371", padding: 4 }}><Trash2 size={16} /></button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
         </div>
       )}
     </>
