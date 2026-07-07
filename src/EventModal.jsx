@@ -25,22 +25,22 @@ export default function EventModal({ groupDoc, editingId, form, setForm, formErr
         <input autoFocus value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="例：歯医者の予約" className="focus-ring" style={{ ...inputStyle, marginBottom: 12 }} />
 
         <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ flex: 1 }}>
             <label style={labelStyle}>開始日</label>
             <input type="date" value={form.startDate} onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value, endDate: f.endDate < e.target.value ? e.target.value : f.endDate }))} className="focus-ring" style={inputStyle} />
           </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ flex: 1 }}>
             <label style={labelStyle}>終了日</label>
             <input type="date" value={form.endDate} min={form.startDate} onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))} className="focus-ring" style={inputStyle} />
           </div>
         </div>
 
         <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ flex: 1 }}>
             <label style={labelStyle}>開始時刻（任意）</label>
             <input type="time" value={form.startTime} onChange={(e) => setForm((f) => ({ ...f, startTime: e.target.value }))} className="focus-ring" style={inputStyle} />
           </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ flex: 1 }}>
             <label style={labelStyle}>終了時刻（任意）</label>
             <input type="time" value={form.endTime} onChange={(e) => setForm((f) => ({ ...f, endTime: e.target.value }))} className="focus-ring" style={inputStyle} />
           </div>
