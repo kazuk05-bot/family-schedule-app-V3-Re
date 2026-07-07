@@ -53,11 +53,11 @@ export default function ScheduleTab({
                 })}
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", marginBottom: 4 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, minmax(0, 1fr))", marginBottom: 4 }}>
                 {WEEKDAYS.map((w, i) => (<div key={w} style={{ textAlign: "center", fontSize: 12, fontWeight: 700, padding: "4px 0", color: i === 0 ? "#B33A3A" : i === 6 ? "#3B5E7A" : "#6E6A5F" }}>{w}</div>))}
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, minmax(0, 1fr))", gap: 4 }}>
                 {cells.map(({ date, inMonth, key }) => {
                   const isToday = sameDay(date, today);
                   const isSelected = key === selected;
